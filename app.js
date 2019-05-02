@@ -37,6 +37,9 @@ var Employee = proto.class(User, [IUser, IPerson], function(proto){
         this.name = name;        
         this.department = department;
     });
+    proto.define(Function, "sayHello", function(){
+        console.log("Hello my name is "+this.name);
+    });
 });
 
 var user = new User("doro@gmail.com", "123");

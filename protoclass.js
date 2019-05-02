@@ -80,8 +80,8 @@ proto.class = function (){
                 base = base.bind(this);
                 args.push(base);
             }            
-            for(var ai = args.length; ai < arguments.length; ai++){
-                args[ai] = arguments[ai];
+            for(var ai = 0; ai < arguments.length; ai++){
+                args.push(arguments[ai]);
             }      
             classConstructor.apply(this, args);
             if(baseClass instanceof Function && !calledBase){
@@ -103,23 +103,27 @@ proto.class = function (){
         }
         if(value instanceof type || value === undefined || value === null){
             classSelf.protoclass[name] = type;
-            this["__"+name] = value;
-            Object.defineProperty(classSelf.prototype, name, {
-                set : function(value){
-                    if(value === null || value === undefined){
-                        this["__"+name] = value;
-                    }else{
-                        if(value instanceof type || value.constructor === type){
+            if(value && value.constructor === Function){
+                Object.defineProperty(classSelf.prototype, name, {value: value});
+            }else{
+                this["__"+name] = value;
+                Object.defineProperty(classSelf.prototype, name, {
+                    set : function(value){
+                        if(value === null || value === undefined){
                             this["__"+name] = value;
                         }else{
-                            throw new TypeError()
-                        }
-                    }                    
-                },
-                get : function(){
-                    return this["__"+name];
-                }
-            })
+                            if(value instanceof type || value.constructor === type){
+                                this["__"+name] = value;
+                            }else{
+                                throw new TypeError()
+                            }
+                        }                    
+                    },
+                    get : function(){
+                        return this["__"+name];
+                    }
+                });
+            }            
         }else{
             throw new TypeError();
         }
