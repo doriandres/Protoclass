@@ -9,7 +9,7 @@ var IUser = proto.interface(function(proto){
  * @interface
  */
 var IPerson = proto.interface(function(proto){
-    proto.define(String, "id");
+    proto.define(Number, "id");
     proto.define(String, "name");
 });
 
@@ -29,11 +29,11 @@ var User = proto.class([IUser], function(proto){
  * @class
  */
 var Employee = proto.class(User, [IUser, IPerson], function(proto){
-    proto.define(String, "id");
+    proto.define(Number, "id");
     proto.define(String, "name");
     proto.constructor(function(base, email, password, name, department){
         base(email, password);
-        this.id = Date.now().toString();
+        this.id = Date.now();
         this.name = name;        
         this.department = department;
     });
